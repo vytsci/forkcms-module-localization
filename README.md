@@ -10,6 +10,17 @@ With this module you will be able to develop module where item will be translate
 * Module: Entities (https://github.com/vytenizs/forkcms-module-entities)
 
 ## Usage
+### Database
+Every table should have its own locale table.
+For example:
+* articles
+* articles_locale
+* articles_categories
+* articles_categories_locale
+
+Each locale table should have primary key consisted of fields `id(int 11)` and `language(varchar 5)`.
+Where `id(int 11)` is record id and `language(varchar 5)` is language code. Everything else is the same.
+
 ### Action files
 #### Execute
 First of all you need to initialize localization object within our action.
