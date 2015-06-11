@@ -19,7 +19,7 @@ For example:
 * articles_categories_locale
 
 Each locale table should have primary key consisted of fields `id(int 11)` and `language(varchar 5)`.
-Where `id(int 11)` is record id and `language(varchar 5)` is language code. Everything else is the same.
+Where `id(int 11)` is record id and `language(varchar 5)` is language code.
 
 ### Action files
 #### Execute
