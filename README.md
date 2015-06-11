@@ -21,6 +21,19 @@ For example:
 Each locale table should have primary key consisted of fields `id(int 11)` and `language(varchar 5)`.
 Where `id(int 11)` is record id and `language(varchar 5)` is language code.
 
+Example:
+articles
+* id(int 11)
+* category_id(int 11)
+* hidden(tinyint 1)
+
+articles_locale
+* id(int 11)
+* language(varchar 5)
+* title(varchar 255)
+* introduction(text)
+* text(text)
+
 ### Action files
 #### Execute
 First of all you need to initialize localization object within our action.
