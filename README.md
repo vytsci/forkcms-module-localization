@@ -5,9 +5,9 @@ So i decided to create module which will be used in place where we need single I
 For example restaurant menu, with default functionality we need to create separate record from every item within menu.
 With this module you will be able to develop module where item will be translated into several languages at its creation or editing stage.
 
-## Dependencies
+## Requirements
 * Core: Fork CMS 3.9.0
-* Module: Entities (http://www.github.com/)
+* Module: Entities (https://github.com/vytenizs/forkcms-module-entities)
 
 ## Usage examples
 ### Action files
