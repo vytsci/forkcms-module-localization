@@ -21,7 +21,7 @@ For example:
 Each locale table should have primary key consisted of fields `id(int 11)` and `language(varchar 5)`.
 Where `id(int 11)` is record id and `language(varchar 5)` is language code.
 
-Example:
+Example tables:
 
 articles
 * id(int 11)
