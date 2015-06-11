@@ -9,16 +9,16 @@ With this module you will be able to develop module where item will be translate
 * Core: Fork CMS 3.9.0
 * Module: Entities (https://github.com/vytenizs/forkcms-module-entities)
 
-## Usage examples
-### Action files
-#### Initialization
-First of all you need to initialize localization object within your action.
+## Usage
+### Actions
+#### Execute
+First of all you need to initialize localization object within our action.
 
 ```
 $this->locale = new BackendLocalizationLocale();
 ```
 
-#### Form building
+#### Load form
 Later where your form is loaded you have to put code that loops through each active language and sets form related data.
 
 ```
@@ -37,7 +37,7 @@ while ($language = $this->locale->loopLanguage()) {
 }
 ```
 
-#### Parse template variables
+#### Parse
 We will use some custom variables and modifiers for our localization module, so we need to parse them,
 this should be put inside parse method of your action.
 
@@ -45,8 +45,8 @@ this should be put inside parse method of your action.
 $this->locale->parse($this->tpl);
 ```
 
-#### Retrieving and saving data
-At we end we want to save our data, last part will go through languages again and collect form data.
+#### Validate form
+At we end we want to save our data, localization will go through languages again and will collect form data.
 
 ```
 while ($language = $this->locale->loopLanguage()) {
@@ -62,4 +62,25 @@ while ($language = $this->locale->loopLanguage()) {
     $this->record->setLocale($language->getCode(), $recordLocale);
     $this->locale->nextLanguage();
 }
+```
+
+### Templates
+Localization is easy to implement within templates. It contains simple `$formLocalization` array which have been parsed
+through `$this->locale->parse($this->tpl);` method.
+
+```
+{iteration:formLocalization}
+  {* Language code (en, ru, lt) *}
+  {$formLocalization.code}
+  {* Language code (english, russian, lithuanian) *}
+  {$formLocalization.title}
+  {* If meta was set, there will be seo variable available which loads SEO fields *}
+  {option:formLocalization.seo}
+    {$formLocalization.seo}
+  {option:formLocalization.seo}
+  {* Fields array with all fields (title, introduction, text) *}
+  {$formLocalization.fields.title}
+  {* Errors array with all fields errors (title, introduction, text) *}
+  {$formLocalization.errors.title}
+{/iteration:formLocalization}
 ```
