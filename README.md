@@ -7,7 +7,7 @@ With this module you will be able to develop module where item will be translate
 
 ## Requirements
 * Core: Fork CMS 3.9.0
-* Module: Entities (https://github.com/vytenizs/forkcms-module-entities)
+* Module: [Entities](https://github.com/vytenizs/forkcms-module-entities)
 
 ## Usage
 ### Database
