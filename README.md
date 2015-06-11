@@ -10,7 +10,7 @@ With this module you will be able to develop module where item will be translate
 * Module: Entities (https://github.com/vytenizs/forkcms-module-entities)
 
 ## Usage
-### Actions
+### Action files
 #### Execute
 First of all you need to initialize localization object within our action.
 
@@ -64,7 +64,7 @@ while ($language = $this->locale->loopLanguage()) {
 }
 ```
 
-### Templates
+### Template files
 Localization is easy to implement within templates. It contains simple `$formLocalization` array which have been parsed
 through `$this->locale->parse($this->tpl);` method.
 
@@ -84,3 +84,13 @@ through `$this->locale->parse($this->tpl);` method.
   {$formLocalization.errors.title}
 {/iteration:formLocalization}
 ```
+
+## Issues
+If you are having any issues, please create issue at [Github](https://github.com/vytenizs/forkcms-module-localization/issues).
+Or contact me directly. Thank you.
+
+## Contacts
+
+* e-mail: info@vytsci.lt
+* skype: vytenizs
+
