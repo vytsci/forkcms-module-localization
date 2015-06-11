@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module>
+	<name>Localization</name>
+	<version>1.0.0</version>
+	<requirements>
+		<minimum_version>3.9.0</minimum_version>
+	</requirements>
+	<description>
+		<![CDATA[
+			Localization module is created for one purpose, to help manage single id and multi language content.
+			For example: I have product catalog module. Products have to be single id, but also have to be translated.
+			This was a problem within Fork CMS. Every content goes different per language and this is bad for such
+			kind of module like catalog, services or others where single records should persist with same id.
+            For module to work modules below is required:
+			* Entities
+		]]>
+	</description>
+	<authors>
+		<author>
+			<name><![CDATA[Vytenis Ščiukas]]></name>
+			<url><![CDATA[http://www.vytsci.lt]]></url>
+		</author>
+	</authors>
+</module>
