@@ -2,8 +2,8 @@
 
 namespace Backend\Modules\Localization\Engine;
 
-use Backend\Modules\Entities\Engine\AbstractEntity;
-use Backend\Modules\Entities\Engine\Entity;
+use Common\Modules\Entities\AbstractEntity;
+use Common\Modules\Entities\Entity;
 
 /**
  * Class LocaleEntity
