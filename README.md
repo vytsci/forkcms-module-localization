@@ -143,4 +143,3 @@ Or contact me directly. Thank you.
 
 * e-mail: info@vytsci.lt
 * skype: vytenizs
-
