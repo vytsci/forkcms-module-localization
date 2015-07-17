@@ -1,12 +1,8 @@
 <?php
 
-namespace Backend\Modules\Localization\Engine;
+namespace Common\Modules\Localization;
 
-use Common\Uri as CommonUri;
-
-use Backend\Core\Engine\Language as BL;
-use Backend\Core\Engine\Model as BackendModel;
-use Backend\Core\Engine\Template as BackendTemplate;
+use Common\Core\Form;
 
 /**
  * Class Helper
@@ -72,25 +68,7 @@ class Helper
     {
         $tpl->mapModifier(
             'parselocalevalue',
-            array('Backend\\Modules\\Localization\\Engine\\Helper', 'parseLocaleValue')
+            array('Common\\Modules\\Localization\\Helper', 'parseLocaleValue')
         );
-    }
-
-    /**
-     * SpoonTemplate is so crappy it can't parse variables into included file so we need to compile this manually
-     *
-     * @param $fields
-     * @param $errors
-     * @param Language $language
-     * @return string
-     * @throws \SpoonTemplateException
-     */
-    public static function parseSeoForm($fields, $errors, Language $language)
-    {
-        $tpl = new BackendTemplate();
-        $tpl->assign('language', $language->getCode());
-        $tpl->assign('fields', $fields);
-        $tpl->assign('errors', $errors);
-        return $tpl->getContent(BACKEND_MODULES_PATH . '/Localization/Layout/Templates/Seo.tpl');
     }
 }

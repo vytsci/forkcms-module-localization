@@ -58,7 +58,7 @@ class Meta extends BackendMeta
         $this->frm = $form;
 
         // set base field name
-        $this->baseFieldName = $this->frm->getFieldName($baseFieldName, $this->language);
+        $this->baseFieldName = $baseFieldName;
 
         // metaId was specified, so we should load the item
         if ($metaId !== null) {
@@ -293,7 +293,7 @@ class Meta extends BackendMeta
         }
 
         // prepare base field
-        $this->frm->getField($this->baseFieldName)->setAttributes(array(
+        $this->frm->getField($this->baseFieldName, $this->language)->setAttributes(array(
             'data-meta-base-field' => '1',
             'data-meta-language' => $this->language->getCode()
         ));

@@ -36,8 +36,16 @@ articles_locale
 * text(text)
 
 ### Action files
+#### Namespaces
+First of all we need to load proper namespaces
+
+```
+use Backend\Modules\Localization\Engine\Form as BackendLocalizationForm;
+use Backend\Modules\Localization\Engine\Locale as BackendLocalizationLocale;
+```
+
 #### Execute
-First of all you need to initialize localization object within our action.
+Later you need to initialize localization object within our action.
 
 ```
 $this->locale = new BackendLocalizationLocale();
@@ -46,18 +54,24 @@ $this->locale = new BackendLocalizationLocale();
 #### Load form
 Later where your form is loaded you have to put code that loops through each active language and sets form related data.
 
+Initialize localization form
+
+```
+$this->frm = new BackendLocalizationForm($this->locale, 'addCategory');
+```
+
+Create localized fields into your form
+
 ```
 while ($language = $this->locale->loopLanguage()) {
-    $this->frm->addText(
-        'title', null, null, 'form-control title', 'form-control danger title'
-    );
-    $this->frm->addEditor(
-        'introduction', null, 'form-control introduction', 'form-control danger introduction'
-    );
-    $this->frm->addEditor(
-        'text', null, 'form-control introduction', 'form-control danger introduction'
-    );
+    $this->frm->addText('title');
+    $this->frm->addEditor('text');
+    $this->frm->addEditor('introduction');
     $language->setMeta($this->frm);
+    $language->getMeta()->setUrlCallback(
+        'Backend\\Modules\\' . $this->URL->getModule() . '\\Engine\\Model',
+        'getURLForCategory'
+    );
     $this->locale->nextLanguage();
 }
 ```
@@ -71,20 +85,31 @@ $this->locale->parse($this->tpl);
 ```
 
 #### Validate form
-At we end we want to save our data, localization will go through languages again and will collect form data.
+At we end we want to check and save our data.
+
+##### Check data
 
 ```
 while ($language = $this->locale->loopLanguage()) {
-    $recordLocale = new EntityArticleLocale();
-    $recordLocale
-        ->setTable(BackendArticlesModel::TBL_ARTICLES_LOCALE)
+    $this->frm->getField('title', $language)->isFilled(BL::err('TitleIsRequired'));
+    $language->getMeta()->validate();
+    $this->locale->nextLanguage();
+}
+```
+
+##### Collect and save data
+
+```
+while ($language = $this->locale->loopLanguage()) {
+    $categoryLocale = new CategoryLocale();
+    $categoryLocale
         ->setId($this->record->getId())
         ->setLanguage($language->getCode())
-        ->setTitle($this->frm->getField('title', $language->getCode())->getValue())
-        ->setIntroduction($this->frm->getField('introduction', $language->getCode())->getValue())
-        ->setText($this->frm->getField('text', $language->getCode())->getValue())
-        ->insert();
-    $this->record->setLocale($language->getCode(), $recordLocale);
+        ->setTitle($this->frm->getField('title', $language)->getValue())
+        ->setIntroduction($this->frm->getField('introduction', $language)->getValue())
+        ->save();
+    $this->record->setLocale($categoryLocale, $language->getCode());
+    $language->getMeta()->save();
     $this->locale->nextLanguage();
 }
 ```

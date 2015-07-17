@@ -4,26 +4,14 @@ namespace Backend\Modules\Localization\Engine;
 
 use Backend\Core\Engine\Language as BL;
 
+use Common\Modules\Localization\Language as CommonLanguage;
+
 /**
  * Class Language
- * @package Backend\Modules\Localization\Engine
+ * @package Backend\Modules\Localization\Engine*
  */
-class Language
+class Language extends CommonLanguage
 {
-    /**
-     * Language code. It comes from outside.
-     *
-     * @var string $code Language code. Example: 'en'
-     */
-    private $code;
-
-    /**
-     * Language title. It is loaded from within framework.
-     *
-     * @var string $title Language title
-     */
-    private $title;
-
     /**
      * Meta object. Only if required.
      *
@@ -39,48 +27,8 @@ class Language
      */
     function __construct($code)
     {
-        $this->code = strtolower($code);
-        $this->title = BL::getLabel(strtoupper($this->code));
-    }
-
-    /**
-     * Gets language code.
-     *
-     * @return string
-     */
-    public function getCode()
-    {
-        return $this->code;
-    }
-
-    /**
-     * Set language code. Example: 'en'
-     *
-     * @param string $code
-     */
-    public function setCode($code)
-    {
-        $this->code = $code;
-    }
-
-    /**
-     * Gets language name.
-     *
-     * @return string
-     */
-    public function getTitle()
-    {
-        return $this->title;
-    }
-
-    /**
-     * Sets language title. Does not change frameworks value. Example: 'English'
-     *
-     * @param string $title
-     */
-    public function setTitle($title)
-    {
-        $this->title = $title;
+        $this->setCode(strtolower($code));
+        $this->setTitle(BL::getLabel(strtoupper($this->getCode())));
     }
 
     /**

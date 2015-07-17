@@ -1,11 +1,6 @@
 <?php
 
-namespace Backend\Modules\Localization\Engine;
-
-use Backend\Core\Engine\Language as BL;
-use Backend\Core\Engine\Model as BackendModel;
-
-use Backend\Modules\Localization\Engine\Helper as BackendLocalizationHelper;
+namespace Common\Modules\Localization;
 
 /**
  * Class Locale
@@ -34,16 +29,8 @@ class Locale
      */
     function __construct($languages = array())
     {
-        if (empty($languages) || !is_array($languages)) {
-            $languages = BL::getActiveLanguages();
-        }
-
         foreach ($languages as $languagesValue) {
             $this->setLanguage($languagesValue);
-        }
-
-        if (!$this->existsLanguage(BL::getWorkingLanguage())) {
-            $this->setLanguage(BL::getWorkingLanguage());
         }
 
         $this->resetLanguage();
@@ -141,17 +128,14 @@ class Locale
     /**
      * Gets language object based on code.
      *
-     * @param string $language Language code. Example: 'en'
-     * @return Language
+     * @param $language
+     * @return mixed
+     * @throws \Exception
      */
     public function getLanguage($language)
     {
-        if (empty($language)) {
-            return null;
-        }
-
-        if (!$this->existsLanguage($language)) {
-            $this->setLanguage($language);
+        if (empty($language) || !$this->existsLanguage($language)) {
+            throw new \Exception('Such language does not exist');
         }
 
         return $this->languages[$language];
@@ -175,12 +159,12 @@ class Locale
     /**
      * Sets up new language object based on code.
      *
-     * @param string $language Language code. Example: 'en'
+     * @param Language $language
      * @return $this
      */
-    public function setLanguage($language)
+    public function setLanguage(Language $language)
     {
-        $this->languages[$language] = new Language($language);
+        $this->languages[$language->getCode()] = $language;
 
         return $this;
     }
@@ -192,6 +176,6 @@ class Locale
      */
     public function parse(\SpoonTemplate $tpl)
     {
-        BackendLocalizationHelper::mapTemplateModifiers($tpl);
+        Helper::mapTemplateModifiers($tpl);
     }
 }

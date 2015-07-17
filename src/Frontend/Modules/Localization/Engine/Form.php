@@ -1,24 +1,21 @@
 <?php
 
-namespace Backend\Modules\Localization\Engine;
+namespace Frontend\Modules\Localization\Engine;
 
-use Symfony\Component\Filesystem\Filesystem;
-
-use Backend\Core\Engine\Model as BackendModel;
-use Backend\Core\Engine\Header as BackendHeader;
-use Backend\Core\Engine\Language as BL;
-use Backend\Core\Engine\Form as BackendForm;
+use Frontend\Core\Engine\Model as FrontendModel;
+use Frontend\Core\Engine\Header as FrontendHeader;
+use Frontend\Core\Engine\Form as FrontendForm;
 
 /**
  * Class Form
  * @package Backend\Modules\Websites\Engine
  */
-class Form extends BackendForm
+class Form extends FrontendForm
 {
     /**
-     * @var BackendHeader
+     * @var FrontendHeader
      */
-    private $header;
+    protected $header;
 
     /**
      * @var Locale
@@ -49,7 +46,7 @@ class Form extends BackendForm
     {
         $this->locale = $locale;
 
-        $this->header = BackendModel::getContainer()->get('header');
+        $this->header = FrontendModel::getContainer()->get('header');
 
         parent::__construct($name, $action, $method, $useToken, $useGlobalError);
     }
@@ -130,21 +127,19 @@ class Form extends BackendForm
         $classError = 'inputEditorError ' . (string)$classError;
         $HTML = (bool)$HTML;
 
-        if (BackendModel::getContainer()->has('header')) {
-            $this->header->addJS('ckeditor/ckeditor.js', 'Core', false);
-            $this->header->addJS('ckeditor/adapters/jquery.js', 'Core', false);
-            $this->header->addJS('ckfinder/ckfinder.js', 'Core', false);
+        if (FrontendModel::getContainer()->has('header')) {
+            $this->header->addJS('/src/Backend/Core/Js/ckeditor/ckeditor.js', false);
+            $this->header->addJS('/src/Backend/Core/Js/ckeditor/adapters/jquery.js', false);
+            $this->header->addJS('/src/Backend/Core/Js/ckfinder/ckfinder.js', false);
 
-            if (is_file(FRONTEND_CACHE_PATH . '/Navigation/editor_link_list_' . BL::getWorkingLanguage() . '.js')) {
+            if (is_file(FRONTEND_CACHE_PATH . '/Navigation/editor_link_list_' . FRONTEND_LANGUAGE . '.js')) {
                 $timestamp = @filemtime(
-                    FRONTEND_CACHE_PATH . '/Navigation/editor_link_list_' . BL::getWorkingLanguage() . '.js'
+                    FRONTEND_CACHE_PATH . '/Navigation/editor_link_list_' . FRONTEND_LANGUAGE . '.js'
                 );
                 $this->header->addJS(
-                    '/src/Frontend/Cache/Navigation/editor_link_list_' . BL::getWorkingLanguage() . '.js?m=' . $timestamp,
-                    null,
+                    '/src/Frontend/Cache/Navigation/editor_link_list_' . FRONTEND_LANGUAGE . '.js',
                     false,
-                    true,
-                    false
+                    $timestamp
                 );
             }
         }
@@ -205,7 +200,7 @@ class Form extends BackendForm
      * @return null|\SpoonFormElement
      * @throws \SpoonFormException
      */
-    public function addTextarea($name, $value = null, $class = 'inputTextarea', $classError = 'inputTextareaError', $HTML = false)
+    public function addTextarea($name, $value = null, $class = null, $classError = null, $HTML = false)
     {
         $name = $this->getFieldName($name, $this->locale->currentLanguage());
 
@@ -241,8 +236,8 @@ class Form extends BackendForm
      */
     public function parse($tpl)
     {
-        $this->header->addJS('jquery/jquery.meta.js', 'Localization', true);
-        $this->header->addJS('Meta.js', 'Localization', true);
+        $this->header->addJS('/src/Frontend/Modules/Localization/Js/jquery/jquery.meta.js', true);
+        $this->header->addJS('/src/Frontend/Modules/Localization/Js/Meta.js', true);
 
         $tpl->assign('form', $this);
         $this->parseLocalization($tpl);
@@ -253,9 +248,10 @@ class Form extends BackendForm
     /**
      * If SpoonTemplate would not be so fucked up this method wont be necessary
      *
-     * @param $tpl
+     * @param \SpoonTemplate $tpl
+     * @throws \SpoonTemplateException
      */
-    public function parseLocalization($tpl)
+    public function parseLocalization(\SpoonTemplate $tpl)
     {
         $formLanguages = array();
 
