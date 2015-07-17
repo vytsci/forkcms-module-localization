@@ -6,7 +6,7 @@ For example restaurant menu, with default functionality we need to create separa
 With this module you will be able to develop module where item will be translated into several languages at its creation or editing stage.
 
 ## Requirements
-* Core: Fork CMS 3.9.0
+* Core: Fork CMS 3.9.4
 * Module: [Entities](https://github.com/vytenizs/forkcms-module-entities)
 
 ## Usage
