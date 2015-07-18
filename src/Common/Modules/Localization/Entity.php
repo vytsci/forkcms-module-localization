@@ -26,22 +26,35 @@ class Entity extends CommonEntity
     protected $locale = array();
 
     /**
+     * @param array $languages
      * @param array $parameters
+     */
+    function __construct($parameters = array(), $languages = array())
+    {
+        parent::__construct($parameters);
+
+        $this->loadLocale($languages);
+    }
+
+    /**
      * @param array $languages
      * @return $this
      * @throws \Exception
      */
-    public function load($parameters = array(), $languages = array())
+    public function loadLocale($languages = array())
     {
-        parent::load($parameters);
-
         if (!empty($languages)) {
+            $this->addRelation('locale');
+
             foreach ($languages as $language) {
                 if (isset($this->_locale)) {
                     /* @var $locale CommonEntity */
                     $locale = new $this->_locale(array($this->getId(), $language));
                     $this->setLocale($locale, $language);
                 }
+            }
+            if (count($languages) == 1) {
+                $this->lockLocaleLanguage(reset($languages));
             }
         }
 
@@ -102,16 +115,6 @@ class Entity extends CommonEntity
         }
 
         return $this->locale[$language];
-    }
-
-    /**
-     * @param null $language
-     * @return CommonEntity
-     * @throws \Exception
-     */
-    public function loadLocale($language = null)
-    {
-        return $this->setLocale(new $this->_locale(), $language);
     }
 
     /**

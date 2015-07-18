@@ -52,17 +52,15 @@ class Language extends CommonLanguage
     }
 
     /**
-     * Setups Meta object. Parameters are same as core Meta.
-     *
+     * @param $module
      * @param $form
      * @param null $metaId
      * @param string $baseFieldName
-     * @param bool $custom
      * @return $this
      */
-    public function setMeta($form, $metaId = null, $baseFieldName = 'title', $custom = false)
+    public function setMeta(Form $form, $module, $metaId = null, $baseFieldName = 'title')
     {
-        $this->meta = new Meta($this, $form, $metaId, $baseFieldName, $custom);
+        $this->meta = new Meta($this, $form, $module, $metaId, $baseFieldName);
 
         return $this;
     }

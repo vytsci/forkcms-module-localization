@@ -40,211 +40,9 @@ class Meta extends BackendMeta
      */
     public function __construct(Language $language, Form $form, $metaId = null, $baseFieldName = 'title', $custom = false)
     {
-        // check if URL is available from the reference
-        if (!BackendModel::getContainer()->has('url')) {
-            throw new Exception('URL should be available in the reference.');
-        }
-
-        // set language instance
         $this->language = $language;
 
-        // get BackendURL instance
-        $this->URL = BackendModel::getContainer()->get('url');
-
-        // should we use meta-custom
-        $this->custom = (bool)$custom;
-
-        // set form instance
-        $this->frm = $form;
-
-        // set base field name
-        $this->baseFieldName = $baseFieldName;
-
-        // metaId was specified, so we should load the item
-        if ($metaId !== null) {
-            $this->loadMeta($metaId);
-        }
-
-        // set default callback
-        $this->setUrlCallback(
-            'Backend\\Modules\\' . $this->URL->getModule() . '\\Engine\\Model',
-            'getURL'
-        );
-
-        // load the form
-        $this->loadForm();
-    }
-
-    /**
-     * Generate an url, using the predefined callback.
-     *
-     * @param string $URL The base-url to start from.
-     * @return string
-     * @throws Exception When the function does not exist
-     */
-    public function generateURL($URL)
-    {
-        // validate (check if the function exists)
-        if (!is_callable(array($this->callback['class'], $this->callback['method']))) {
-            throw new Exception('The callback-method doesn\'t exist.');
-        }
-
-        // build parameters for use in the callback
-        $parameters[] = CommonUri::getUrl($URL);
-
-        // add parameters set by user
-        if (!empty($this->callback['parameters'])) {
-            foreach ($this->callback['parameters'] as $parameter) {
-                $parameters[] = $parameter;
-            }
-        }
-
-        // get the real url
-        return call_user_func_array(array($this->callback['class'], $this->callback['method']), $parameters);
-    }
-
-    /**
-     * Get the current value for the meta-description;
-     *
-     * @return mixed
-     */
-    public function getDescription()
-    {
-        // not set so return null
-        if (!isset($this->data['description'])) {
-            return null;
-        }
-
-        // return value
-        return $this->data['description'];
-    }
-
-    /**
-     * Should the description overwrite the default
-     *
-     * @return null|boolean
-     */
-    public function getDescriptionOverwrite()
-    {
-        // not set so return null
-        if (!isset($this->data['description_overwrite'])) {
-            return null;
-        }
-
-        // return value
-        return ($this->data['description_overwrite'] == 'Y');
-    }
-
-    /**
-     * Get the current value for the metaId;
-     *
-     * @return null|integer
-     */
-    public function getId()
-    {
-        // not set so return null
-        if (!isset($this->data['id'])) {
-            return null;
-        }
-
-        // return value
-        return (int)$this->data['id'];
-    }
-
-    /**
-     * Get the current value for the meta-keywords;
-     *
-     * @return mixed
-     */
-    public function getKeywords()
-    {
-        // not set so return null
-        if (!isset($this->data['keywords'])) {
-            return null;
-        }
-
-        // return value
-        return $this->data['keywords'];
-    }
-
-    /**
-     * Should the keywords overwrite the default
-     *
-     * @return null|boolean
-     */
-    public function getKeywordsOverwrite()
-    {
-        // not set so return null
-        if (!isset($this->data['keywords_overwrite'])) {
-            return null;
-        }
-
-        // return value
-        return ($this->data['keywords_overwrite'] == 'Y');
-    }
-
-    /**
-     * Get the current value for the page title;
-     *
-     * @return mixed
-     */
-    public function getTitle()
-    {
-        // not set so return null
-        if (!isset($this->data['title'])) {
-            return null;
-        }
-
-        // return value
-        return $this->data['title'];
-    }
-
-    /**
-     * Should the title overwrite the default
-     *
-     * @return null|boolean
-     */
-    public function getTitleOverwrite()
-    {
-        // not set so return null
-        if (!isset($this->data['title_overwrite'])) {
-            return null;
-        }
-
-        // return value
-        return ($this->data['title_overwrite'] == 'Y');
-    }
-
-    /**
-     * Return the current value for an URL
-     *
-     * @return null|string
-     */
-    public function getURL()
-    {
-        // not set so return null
-        if (!isset($this->data['url'])) {
-            return null;
-        }
-
-        // return value
-        return urldecode($this->data['url']);
-    }
-
-    /**
-     * Should the URL overwrite the default
-     *
-     * @return null|boolean
-     */
-    public function getURLOverwrite()
-    {
-        // not set so return null
-        if (!isset($this->data['url_overwrite'])) {
-            return null;
-        }
-
-        // return value
-        return ($this->data['url_overwrite'] == 'Y');
+        parent::__construct($form, $metaId, $baseFieldName, $custom);
     }
 
     /**
@@ -375,35 +173,6 @@ class Meta extends BackendMeta
     }
 
     /**
-     * Load a specific meta-record
-     *
-     * @param int $id The id of the record to load.
-     * @throws Exception If no meta-record exists with the provided id
-     */
-    protected function loadMeta($id)
-    {
-        $this->id = (int)$id;
-
-        // get item
-        $this->data = (array)BackendModel::getContainer()->get('database')->getRecord(
-            'SELECT *
-             FROM meta AS m
-             WHERE m.id = ?',
-            array($this->id)
-        );
-
-        // validate meta-record
-        if (empty($this->data)) {
-            throw new Exception('Meta-record doesn\'t exist.');
-        }
-
-        // unserialize data
-        if (isset($this->data['data'])) {
-            $this->data['data'] = @unserialize($this->data['data']);
-        }
-    }
-
-    /**
      * Saves the meta object
      *
      * @param bool $update Should we update the record or insert a new one.
@@ -441,8 +210,8 @@ class Meta extends BackendMeta
                 $this->frm->getField('url', $this->language)->getValue()
             );
         } else {
-            $URL = \SpoonFilter::htmlspecialcharsDecode($this->frm->getField(
-                $this->baseFieldName, $this->language)->getValue()
+            $URL = \SpoonFilter::htmlspecialcharsDecode(
+                $this->frm->getField($this->baseFieldName, $this->language)->getValue()
             );
         }
 
@@ -504,28 +273,6 @@ class Meta extends BackendMeta
 
             return $id;
         }
-    }
-
-    /**
-     * Set the callback to calculate an unique URL
-     * REMARK: this method has to be public and static
-     * REMARK: if you specify arguments they will be appended
-     *
-     * @param string $className Name of the class to use.
-     * @param string $methodName Name of the method to use.
-     * @param array $parameters Parameters to parse, they will be passed after ours.
-     */
-    public function setURLCallback($className, $methodName, $parameters = array())
-    {
-        $className = (string)$className;
-        $methodName = (string)$methodName;
-        $parameters = (array)$parameters;
-
-        // store in property
-        $this->callback = array('class' => $className, 'method' => $methodName, 'parameters' => $parameters);
-
-        // re-load the form
-        $this->loadForm();
     }
 
     /**

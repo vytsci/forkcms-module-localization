@@ -208,6 +208,17 @@ class Form extends FrontendForm
     }
 
     /**
+     * @param string $name
+     * @param Language|null $language
+     * @return \SpoonFormElement
+     * @throws \SpoonFormException
+     */
+    public function getField($name, Language $language = null)
+    {
+        return parent::getField($this->getFieldName($name, $language));
+    }
+
+    /**
      * @param $name
      * @param Language $language
      * @return string

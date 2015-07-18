@@ -105,11 +105,11 @@ while ($language = $this->locale->loopLanguage()) {
     $categoryLocale
         ->setId($this->record->getId())
         ->setLanguage($language->getCode())
+        ->setMetaId($language->getMeta()->save())
         ->setTitle($this->frm->getField('title', $language)->getValue())
         ->setIntroduction($this->frm->getField('introduction', $language)->getValue())
         ->save();
     $this->record->setLocale($categoryLocale, $language->getCode());
-    $language->getMeta()->save();
     $this->locale->nextLanguage();
 }
 ```
