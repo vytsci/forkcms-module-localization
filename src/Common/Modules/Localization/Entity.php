@@ -2,7 +2,9 @@
 
 namespace Common\Modules\Localization;
 
+use Common\Modules\Entities\AbstractEntity;
 use Common\Modules\Entities\Entity as CommonEntity;
+use Common\Modules\Entities\Helper as CommonEntitiesHelper;
 
 /**
  * Class Entity
@@ -136,5 +138,35 @@ class Entity extends CommonEntity
         $this->locale[$language] = $locale;
 
         return $this->getLocale($language);
+    }
+
+    /**
+     * @param bool|false $onlyColumns
+     * @return array
+     * @throws \Exception
+     */
+    public function toArray($onlyColumns = false)
+    {
+        $result = array();
+
+        foreach ($this->getVariables(!$onlyColumns) as $variablesKey => &$variablesValue) {
+            $variablesKey = CommonEntitiesHelper::toSnakeCase($variablesKey);
+            if ($variablesKey === 'locale' && isset($this->_language)) {
+                $result[$variablesKey] = $this->getLocale()->toArray();
+                continue;
+            }
+            if (is_array($variablesValue)) {
+                foreach ($variablesValue as $variablesValueKey => &$variablesValueValue) {
+                    $variablesValueKey = CommonEntitiesHelper::toSnakeCase($variablesValueKey);
+                    if ($variablesValueValue instanceof AbstractEntity) {
+                        $result[$variablesKey][$variablesValueKey] = $variablesValueValue->toArray();
+                    }
+                }
+                continue;
+            }
+            $result[$variablesKey] = $variablesValue;
+        }
+
+        return $result;
     }
 }
