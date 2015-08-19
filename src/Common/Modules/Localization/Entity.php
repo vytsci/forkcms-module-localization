@@ -39,6 +39,20 @@ class Entity extends CommonEntity
     }
 
     /**
+     * @param $record
+     * @param array $languages
+     * @return $this
+     */
+    public function assemble($record, $languages = array())
+    {
+        parent::assemble($record);
+
+        $this->loadLocale($languages);
+
+        return $this;
+    }
+
+    /**
      * @param array $languages
      * @return $this
      * @throws \Exception
@@ -149,14 +163,14 @@ class Entity extends CommonEntity
     {
         $result = array();
 
-        foreach ($this->getVariables(!$onlyColumns) as $variablesKey => &$variablesValue) {
+        foreach ($this->getVariables(!$onlyColumns) as $variablesKey => $variablesValue) {
             $variablesKey = CommonEntitiesHelper::toSnakeCase($variablesKey);
             if ($variablesKey === 'locale' && isset($this->_language)) {
                 $result[$variablesKey] = $this->getLocale()->toArray();
                 continue;
             }
             if (is_array($variablesValue)) {
-                foreach ($variablesValue as $variablesValueKey => &$variablesValueValue) {
+                foreach ($variablesValue as $variablesValueKey => $variablesValueValue) {
                     $variablesValueKey = CommonEntitiesHelper::toSnakeCase($variablesValueKey);
                     if ($variablesValueValue instanceof AbstractEntity) {
                         $result[$variablesKey][$variablesValueKey] = $variablesValueValue->toArray();

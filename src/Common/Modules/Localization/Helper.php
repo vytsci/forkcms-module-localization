@@ -18,7 +18,15 @@ class Helper
      */
     public static function parseLocaleValue($record, $name, $language)
     {
-        return isset($record['locale'][$language][$name])?$record['locale'][$language][$name]:'';
+        if (isset($record['locale'][$name])) {
+            return $record['locale'][$name];
+        }
+
+        if (isset($record['locale'][$language][$name])) {
+            return $record['locale'][$language][$name];
+        }
+
+        return '';
     }
 
     /**
