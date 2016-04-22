@@ -15,6 +15,7 @@ use Backend\Core\Engine\Language as BL;
  */
 class Meta extends BackendMeta
 {
+
     /**
      * The form instance
      *
@@ -38,8 +39,13 @@ class Meta extends BackendMeta
      * @throws Exception
      * @throws \Backend\Core\Engine\Exception
      */
-    public function __construct(Language $language, Form $form, $metaId = null, $baseFieldName = 'title', $custom = false)
-    {
+    public function __construct(
+        Language $language,
+        Form $form,
+        $metaId = null,
+        $baseFieldName = 'title',
+        $custom = false
+    ) {
         $this->language = $language;
 
         parent::__construct($form, $metaId, $baseFieldName, $custom);
@@ -91,10 +97,12 @@ class Meta extends BackendMeta
         }
 
         // prepare base field
-        $this->frm->getField($this->baseFieldName, $this->language)->setAttributes(array(
-            'data-meta-base-field' => '1',
-            'data-meta-language' => $this->language->getCode()
-        ));
+        $this->frm->getField($this->baseFieldName, $this->language)->setAttributes(
+            array(
+                'data-meta-base-field' => '1',
+                'data-meta-language' => $this->language->getCode(),
+            )
+        );
 
         // add page title elements into the form
         $this->frm->addCheckbox(
@@ -122,7 +130,8 @@ class Meta extends BackendMeta
             (isset($this->data['keywords_overwrite']) && $this->data['keywords_overwrite'] == 'Y')
         );
         $this->frm->addText(
-            'meta_keywords', (isset($this->data['keywords'])) ? $this->data['keywords'] : null
+            'meta_keywords',
+            (isset($this->data['keywords'])) ? $this->data['keywords'] : null
         );
 
         // add URL elements into the form
@@ -131,14 +140,15 @@ class Meta extends BackendMeta
             (isset($this->data['url_overwrite']) && $this->data['url_overwrite'] == 'Y')
         );
         $this->frm->addText(
-            'url', (isset($this->data['url'])) ? urldecode($this->data['url']) : null
+            'url',
+            (isset($this->data['url'])) ? urldecode($this->data['url']) : null
         );
 
         // advanced SEO
         $indexValues = array(
             array('value' => 'none', 'label' => BL::getLabel('None')),
             array('value' => 'index', 'label' => 'index'),
-            array('value' => 'noindex', 'label' => 'noindex')
+            array('value' => 'noindex', 'label' => 'noindex'),
         );
         $this->frm->addRadiobutton(
             'seo_index',
@@ -148,7 +158,7 @@ class Meta extends BackendMeta
         $followValues = array(
             array('value' => 'none', 'label' => BL::getLabel('None')),
             array('value' => 'follow', 'label' => 'follow'),
-            array('value' => 'nofollow', 'label' => 'nofollow')
+            array('value' => 'nofollow', 'label' => 'nofollow'),
         );
         $this->frm->addRadiobutton(
             'seo_follow',
@@ -160,7 +170,8 @@ class Meta extends BackendMeta
         if ($this->custom) {
             // add meta custom element into the form
             $this->frm->addTextarea(
-                'meta_custom', (isset($this->data['custom'])) ? $this->data['custom'] : null
+                'meta_custom',
+                (isset($this->data['custom'])) ? $this->data['custom'] : null
             );
         }
 
@@ -243,7 +254,8 @@ class Meta extends BackendMeta
         )->isChecked() ? 'Y' : 'N';
         $meta['url'] = $URL;
         $meta['url_overwrite'] = $this->frm->getField(
-            'url_overwrite', $this->language
+            'url_overwrite',
+            $this->language
         )->isChecked() ? 'Y' : 'N';
         $meta['custom'] = $custom;
         $meta['data'] = null;
@@ -261,10 +273,7 @@ class Meta extends BackendMeta
 
         $db = BackendModel::getContainer()->get('database');
 
-        if ($update) {
-            if ($this->id === null) {
-                throw new Exception('No metaID specified.');
-            }
+        if ((bool)$update && isset($this->id)) {
             $db->update('meta', $meta, 'id = ?', array($this->id));
 
             return $this->id;

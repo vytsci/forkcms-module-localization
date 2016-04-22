@@ -13,6 +13,7 @@ use Frontend\Core\Engine\Url as FrontendUrl;
  */
 class Meta
 {
+
     /**
      * @var Language
      */
@@ -82,7 +83,7 @@ class Meta
 
         // set default callback
         $this->setUrlCallback(
-            'Frontend\\Modules\\' . $module . '\\Engine\\Model',
+            'Frontend\\Modules\\'.$module.'\\Engine\\Model',
             'getURL'
         );
     }
@@ -165,9 +166,11 @@ class Meta
         $title = $this->frm->getField($this->baseFieldName, $this->language)->getValue();
 
         // build URL
-        $URL = $this->generateURL(\SpoonFilter::htmlspecialcharsDecode(
-            $this->frm->getField($this->baseFieldName, $this->language)->getValue()
-        ));
+        $URL = $this->generateURL(
+            \SpoonFilter::htmlspecialcharsDecode(
+                $this->frm->getField($this->baseFieldName, $this->language)->getValue()
+            )
+        );
 
         // build meta
         $this->data['keywords'] = $title;
@@ -181,17 +184,14 @@ class Meta
 
         $db = FrontendModel::getContainer()->get('database');
 
-        if ((bool)$update) {
-            if ($this->id === null) {
-                throw new \Exception('No metaID specified.');
-            }
+        if ((bool)$update && isset($this->id)) {
             $db->update('meta', $this->data, 'id = ?', array($this->id));
 
             return $this->id;
         } else {
-            $id = (int)$db->insert('meta', $this->data);
+            $this->id = (int)$db->insert('meta', $this->data);
 
-            return $id;
+            return $this->id;
         }
     }
 }

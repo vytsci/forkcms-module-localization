@@ -4,7 +4,7 @@ namespace Backend\Modules\Localization\Engine;
 
 use Backend\Core\Engine\Language as BL;
 
-use Common\Modules\Localization\Language as CommonLanguage;
+use Common\Modules\Localization\Engine\Language as CommonLanguage;
 
 /**
  * Class Language
@@ -12,6 +12,7 @@ use Common\Modules\Localization\Language as CommonLanguage;
  */
 class Language extends CommonLanguage
 {
+
     /**
      * Meta object. Only if required.
      *

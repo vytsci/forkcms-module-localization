@@ -55,7 +55,7 @@
                             url: url,
                             metaId: $('#' + (language ? language + 'M' : 'm') + 'etaId').val(),
                             baseFieldName: $('#' + (language ? language + 'B' : 'b') + 'aseFieldName').val(),
-                            custom: $('#' + (language ? language + 'C' : 'p') + 'ustom').val(),
+                            custom: $('#' + (language ? language + 'C' : 'c') + 'ustom').val(),
                             className: $('#' + (language ? language + 'C' : 'c') + 'lassName').val(),
                             methodName: $('#' + (language ? language + 'M' : 'm') + 'ethodName').val(),
                             parameters: $('#' + (language ? language + 'P' : 'p') + 'arameters').val()

@@ -4,7 +4,7 @@ namespace Backend\Modules\Localization\Engine;
 
 use Backend\Core\Engine\Language as BL;
 
-use Common\Modules\Localization\Locale as CommonLocale;
+use Common\Modules\Localization\Engine\Locale as CommonLocale;
 
 /**
  * Class Locale
@@ -12,6 +12,7 @@ use Common\Modules\Localization\Locale as CommonLocale;
  */
 class Locale extends CommonLocale
 {
+
     /**
      * Sets up given languages. If $languages array is empty all active languages will be loaded.
      *

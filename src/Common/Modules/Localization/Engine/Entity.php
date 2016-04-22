@@ -1,17 +1,16 @@
 <?php
 
-namespace Common\Modules\Localization;
+namespace Common\Modules\Localization\Engine;
 
-use Common\Modules\Entities\AbstractEntity;
-use Common\Modules\Entities\Entity as CommonEntity;
-use Common\Modules\Entities\Helper as CommonEntitiesHelper;
+use Common\Modules\Entities\Engine\Entity as CommonEntity;
 
 /**
  * Class Entity
- * @package Common\Modules\Localization
+ * @package Common\Modules\Localization\Engine
  */
 class Entity extends CommonEntity
 {
+
     /**
      * @var string
      */
@@ -21,6 +20,11 @@ class Entity extends CommonEntity
      * @var string
      */
     protected $_language;
+
+    /**
+     * @var
+     */
+    protected $_languages = array();
 
     /**
      * @var array
@@ -33,9 +37,9 @@ class Entity extends CommonEntity
      */
     function __construct($parameters = array(), $languages = array())
     {
-        parent::__construct($parameters);
+        $this->setLanguages($languages);
 
-        $this->loadLocale($languages);
+        parent::__construct($parameters);
     }
 
     /**
@@ -45,22 +49,27 @@ class Entity extends CommonEntity
      */
     public function assemble($record, $languages = array())
     {
+        if (!empty($languages)) {
+            $this->setLanguages($languages);
+        }
+
         parent::assemble($record);
 
-        $this->loadLocale($languages);
+        $this->loadLocale();
 
         return $this;
     }
 
     /**
-     * @param array $languages
      * @return $this
      * @throws \Exception
      */
-    public function loadLocale($languages = array())
+    public function loadLocale()
     {
-        if (!empty($languages)) {
+        if ($this->hasLanguages()) {
             $this->addRelation('locale');
+
+            $languages = $this->getLanguages();
 
             foreach ($languages as $language) {
                 if (isset($this->_locale)) {
@@ -116,8 +125,8 @@ class Entity extends CommonEntity
     }
 
     /**
-     * @param $language
-     * @return Entity
+     * @param null $language
+     * @return mixed
      * @throws \Exception
      */
     public function getLocale($language = null)
@@ -126,11 +135,43 @@ class Entity extends CommonEntity
             $language = $this->_language;
         }
 
+        if (empty($language)) {
+            throw new \Exception('It is required to set or pass language');
+        }
+
         if (!isset($this->locale[$language])) {
-            throw new \Exception('Locale does not exist');
+            $this->locale[$language] = new $this->_locale();
+            $this->locale[$language]->setLanguage($language);
         }
 
         return $this->locale[$language];
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasLanguages()
+    {
+        return !empty($this->_languages);
+    }
+
+    /**
+     * @param $languages
+     * @return $this
+     */
+    public function setLanguages($languages)
+    {
+        $this->_languages = (array)$languages;
+
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getLanguages()
+    {
+        return $this->_languages;
     }
 
     /**
@@ -152,35 +193,5 @@ class Entity extends CommonEntity
         $this->locale[$language] = $locale;
 
         return $this->getLocale($language);
-    }
-
-    /**
-     * @param bool|false $onlyColumns
-     * @return array
-     * @throws \Exception
-     */
-    public function toArray($onlyColumns = false)
-    {
-        $result = array();
-
-        foreach ($this->getVariables(!$onlyColumns) as $variablesKey => $variablesValue) {
-            $variablesKey = CommonEntitiesHelper::toSnakeCase($variablesKey);
-            if ($variablesKey === 'locale' && isset($this->_language)) {
-                $result[$variablesKey] = $this->getLocale()->toArray();
-                continue;
-            }
-            if (is_array($variablesValue)) {
-                foreach ($variablesValue as $variablesValueKey => $variablesValueValue) {
-                    $variablesValueKey = CommonEntitiesHelper::toSnakeCase($variablesValueKey);
-                    if ($variablesValueValue instanceof AbstractEntity) {
-                        $result[$variablesKey][$variablesValueKey] = $variablesValueValue->toArray();
-                    }
-                }
-                continue;
-            }
-            $result[$variablesKey] = $variablesValue;
-        }
-
-        return $result;
     }
 }

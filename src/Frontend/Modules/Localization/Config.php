@@ -10,17 +10,18 @@ use Frontend\Core\Engine\Base\Config as FrontendBaseConfig;
  */
 class Config extends FrontendBaseConfig
 {
+
     /**
      * The default action
      *
-     * @var	string
+     * @var    string
      */
     protected $defaultAction = 'Index';
 
     /**
      * The disabled actions
      *
-     * @var	array
+     * @var    array
      */
     protected $disabledActions = array();
 }

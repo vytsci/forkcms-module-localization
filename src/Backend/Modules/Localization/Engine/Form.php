@@ -13,6 +13,7 @@ use Backend\Core\Engine\Form as BackendForm;
  */
 class Form extends BackendForm
 {
+
     /**
      * @var BackendHeader
      */
@@ -43,8 +44,7 @@ class Form extends BackendForm
         $method = 'post',
         $useToken = true,
         $useGlobalError = true
-    )
-    {
+    ) {
         $this->locale = $locale;
 
         $this->header = BackendModel::getContainer()->get('header');
@@ -66,7 +66,7 @@ class Form extends BackendForm
             return;
         }
 
-        $prefix = $language->getCode() . '_';
+        $prefix = $language->getCode().'_';
 
         if (0 === strpos($object->getName(), $prefix)) {
             $key = substr_replace($object->getName(), '', 0, strlen($prefix));
@@ -105,8 +105,7 @@ class Form extends BackendForm
         $multipleSelection = false,
         $class = null,
         $classError = null
-    )
-    {
+    ) {
         $name = $this->getFieldName($name, $this->locale->currentLanguage());
 
         return parent::addDropdown($name, $values, $selected, $multipleSelection, $class, $classError);
@@ -124,8 +123,8 @@ class Form extends BackendForm
     {
         $name = $this->getFieldName($name, $this->locale->currentLanguage());
         $value = ($value !== null) ? (string)$value : null;
-        $class = 'inputEditor ' . (string)$class;
-        $classError = 'inputEditorError ' . (string)$classError;
+        $class = 'inputEditor '.(string)$class;
+        $classError = 'inputEditorError '.(string)$classError;
         $HTML = (bool)$HTML;
 
         if (BackendModel::getContainer()->has('header')) {
@@ -133,12 +132,12 @@ class Form extends BackendForm
             $this->header->addJS('ckeditor/adapters/jquery.js', 'Core', false);
             $this->header->addJS('ckfinder/ckfinder.js', 'Core', false);
 
-            if (is_file(FRONTEND_CACHE_PATH . '/Navigation/editor_link_list_' . BL::getWorkingLanguage() . '.js')) {
+            if (is_file(FRONTEND_CACHE_PATH.'/Navigation/editor_link_list_'.BL::getWorkingLanguage().'.js')) {
                 $timestamp = @filemtime(
-                    FRONTEND_CACHE_PATH . '/Navigation/editor_link_list_' . BL::getWorkingLanguage() . '.js'
+                    FRONTEND_CACHE_PATH.'/Navigation/editor_link_list_'.BL::getWorkingLanguage().'.js'
                 );
                 $this->header->addJS(
-                    '/src/Frontend/Cache/Navigation/editor_link_list_' . BL::getWorkingLanguage() . '.js?m=' . $timestamp,
+                    '/src/Frontend/Cache/Navigation/editor_link_list_'.BL::getWorkingLanguage().'.js?m='.$timestamp,
                     null,
                     false,
                     true,
@@ -146,7 +145,7 @@ class Form extends BackendForm
                 );
             }
         }
-        
+
         return parent::addTextarea($name, $value, $class, $classError, $HTML);
     }
 
@@ -203,8 +202,13 @@ class Form extends BackendForm
      * @return null|\SpoonFormElement
      * @throws \SpoonFormException
      */
-    public function addTextarea($name, $value = null, $class = 'inputTextarea', $classError = 'inputTextareaError', $HTML = false)
-    {
+    public function addTextarea(
+        $name,
+        $value = null,
+        $class = 'inputTextarea',
+        $classError = 'inputTextareaError',
+        $HTML = false
+    ) {
         $name = $this->getFieldName($name, $this->locale->currentLanguage());
 
         return parent::addTextarea($name, $value, $class, $classError);
@@ -229,7 +233,7 @@ class Form extends BackendForm
     public function getFieldName($name, Language $language = null)
     {
         if (!empty($language) && !empty($name)) {
-            return $language->getCode() . '_' . $name;
+            return $language->getCode().'_'.$name;
         }
 
         return (string)$name;
@@ -275,7 +279,7 @@ class Form extends BackendForm
                 'title' => $language->getTitle(),
                 'fields' => array(),
                 'errors' => array(),
-                'seo' => false
+                'seo' => false,
             );
             $fields = array();
             $errors = array();

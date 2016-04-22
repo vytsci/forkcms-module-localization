@@ -3,6 +3,7 @@
 namespace Frontend\Modules\Localization\Engine;
 
 use Frontend\Core\Engine\Model as FrontendModel;
+use Frontend\Core\Engine\Language as FL;
 use Frontend\Core\Engine\Header as FrontendHeader;
 use Frontend\Core\Engine\Form as FrontendForm;
 
@@ -12,6 +13,7 @@ use Frontend\Core\Engine\Form as FrontendForm;
  */
 class Form extends FrontendForm
 {
+
     /**
      * @var FrontendHeader
      */
@@ -28,6 +30,11 @@ class Form extends FrontendForm
     private $fields;
 
     /**
+     * @var bool
+     */
+    private $defaultLanguageSupport = false;
+
+    /**
      * @param Locale $locale
      * @param null $name
      * @param null $action
@@ -42,8 +49,7 @@ class Form extends FrontendForm
         $method = 'post',
         $useToken = true,
         $useGlobalError = true
-    )
-    {
+    ) {
         $this->locale = $locale;
 
         $this->header = FrontendModel::getContainer()->get('header');
@@ -65,7 +71,7 @@ class Form extends FrontendForm
             return;
         }
 
-        $prefix = $language->getCode() . '_';
+        $prefix = $language->getCode().'_';
 
         if (0 === strpos($object->getName(), $prefix)) {
             $key = substr_replace($object->getName(), '', 0, strlen($prefix));
@@ -104,8 +110,7 @@ class Form extends FrontendForm
         $multipleSelection = false,
         $class = null,
         $classError = null
-    )
-    {
+    ) {
         $name = $this->getFieldName($name, $this->locale->currentLanguage());
 
         return parent::addDropdown($name, $values, $selected, $multipleSelection, $class, $classError);
@@ -123,27 +128,14 @@ class Form extends FrontendForm
     {
         $name = $this->getFieldName($name, $this->locale->currentLanguage());
         $value = ($value !== null) ? (string)$value : null;
-        $class = 'inputEditor ' . (string)$class;
-        $classError = 'inputEditorError ' . (string)$classError;
+        $class = 'inputEditor '.(string)$class;
+        $classError = 'inputEditorError '.(string)$classError;
         $HTML = (bool)$HTML;
 
         if (FrontendModel::getContainer()->has('header')) {
-            $this->header->addJS('/src/Backend/Core/Js/ckeditor/ckeditor.js', false);
-            $this->header->addJS('/src/Backend/Core/Js/ckeditor/adapters/jquery.js', false);
-            $this->header->addJS('/src/Backend/Core/Js/ckfinder/ckfinder.js', false);
-
-            if (is_file(FRONTEND_CACHE_PATH . '/Navigation/editor_link_list_' . FRONTEND_LANGUAGE . '.js')) {
-                $timestamp = @filemtime(
-                    FRONTEND_CACHE_PATH . '/Navigation/editor_link_list_' . FRONTEND_LANGUAGE . '.js'
-                );
-                $this->header->addJS(
-                    '/src/Frontend/Cache/Navigation/editor_link_list_' . FRONTEND_LANGUAGE . '.js',
-                    false,
-                    $timestamp
-                );
-            }
+            //@todo should load some 3rd party wysi editor
         }
-        
+
         return parent::addTextarea($name, $value, $class, $classError, $HTML);
     }
 
@@ -226,7 +218,7 @@ class Form extends FrontendForm
     public function getFieldName($name, Language $language = null)
     {
         if (!empty($language) && !empty($name)) {
-            return $language->getCode() . '_' . $name;
+            return $language->getCode().'_'.$name;
         }
 
         return (string)$name;
@@ -270,9 +262,10 @@ class Form extends FrontendForm
             $formLanguage = array(
                 'code' => $language->getCode(),
                 'title' => $language->getTitle(),
+                'is_default' => $this->isDefaultLanguage(),
                 'fields' => array(),
                 'errors' => array(),
-                'seo' => false
+                'seo' => false,
             );
             $fields = array();
             $errors = array();
@@ -289,10 +282,86 @@ class Form extends FrontendForm
                     $formLanguage['seo'] = Helper::parseSeoForm($fields, $errors, $language);
                 }
             }
+
+            if ($this->defaultLanguageSupport) {
+                $fieldIsDefault = parent::getField('is_default');
+                $selectionsIsDefault = $fieldIsDefault->parse();
+
+                foreach ($selectionsIsDefault as $selectionIsDefault) {
+                    if ($selectionIsDefault['value'] == $language->getCode()) {
+                        $formLanguage['fields']['is_default'] = $selectionIsDefault;
+                    }
+                }
+            }
+
             $formLanguages[$language->getCode()] = $formLanguage;
             $this->locale->nextLanguage();
         }
 
         $tpl->assign('formLocalization', $formLanguages);
+    }
+
+    /**
+     * @param null $defaultLanguage
+     */
+    public function enableDefaultLanguageSupport($defaultLanguage = null)
+    {
+        $languages = $this->locale->getLanguages();
+        $values = array();
+
+        foreach ($languages as $language) {
+            $values[] = array(
+                'label' => FL::lbl('IsDefaultLanguage'),
+                'value' => $language->getCode(),
+            );
+        }
+
+        parent::addRadiobutton(
+            'is_default',
+            $values,
+            $defaultLanguage
+        );
+
+        $this->defaultLanguageSupport = true;
+    }
+
+    /**
+     * @return bool
+     * @throws \SpoonFormException
+     */
+    public function isDefaultLanguage()
+    {
+        if (parent::existsField('is_default') && $this->defaultLanguageSupport) {
+            $selectedDefaultLanguage = parent::getField('is_default')->getValue();
+
+            if (in_array($selectedDefaultLanguage, $this->locale->getLanguagesRaw())) {
+                return $this->locale->currentLanguage()->getCode() == $selectedDefaultLanguage;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * @param $language
+     * @throws \SpoonFormException
+     */
+    public function setDefaultLanguage($language)
+    {
+        if ($this->defaultLanguageSupport === false) {
+            $this->enableDefaultLanguageSupport();
+        }
+
+        parent::getField('is_default')->setChecked($language);
+    }
+
+    /**
+     * @param bool|false $set
+     */
+    public function setDefaultLanguageByCurrentLanguage($set = false)
+    {
+        if ($this->defaultLanguageSupport && $set) {
+            $this->setDefaultLanguage($this->locale->currentLanguage()->getCode());
+        }
     }
 }

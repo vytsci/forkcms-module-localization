@@ -1,6 +1,6 @@
 <?php
 
-namespace Common\Modules\Localization;
+namespace Common\Modules\Localization\Engine;
 
 use Common\Core\Form;
 
@@ -10,6 +10,7 @@ use Common\Core\Form;
  */
 class Helper
 {
+
     /**
      * @param $record
      * @param $name
@@ -76,7 +77,7 @@ class Helper
     {
         $tpl->mapModifier(
             'parselocalevalue',
-            array('Common\\Modules\\Localization\\Helper', 'parseLocaleValue')
+            array('Common\\Modules\\Localization\\Engine\\Helper', 'parseLocaleValue')
         );
     }
 }

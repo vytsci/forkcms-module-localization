@@ -1,13 +1,14 @@
 <?php
 
-namespace Common\Modules\Localization;
+namespace Common\Modules\Localization\Engine;
 
 /**
  * Class Language
- * @package Common\Modules\Localization
+ * @package Common\Modules\Localization\Engine
  */
 class Language
 {
+
     /**
      * Language code. It comes from outside.
      *

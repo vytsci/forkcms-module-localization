@@ -1,15 +1,16 @@
 <?php
 
-namespace Common\Modules\Localization;
+namespace Common\Modules\Localization\Engine;
 
-use Common\Modules\Entities\Entity as CommonEntity;
+use Common\Modules\Entities\Engine\Entity as CommonEntity;
 
 /**
  * Class EntityLocale
- * @package Common\Modules\Localization
+ * @package Common\Modules\Localization\Engine
  */
 class EntityLocale extends CommonEntity
 {
+
     /**
      * @var array
      */
@@ -19,6 +20,11 @@ class EntityLocale extends CommonEntity
      * @var string
      */
     protected $language;
+
+    /**
+     * @var bool
+     */
+    protected $default = false;
 
     /**
      * @return mixed
@@ -35,6 +41,25 @@ class EntityLocale extends CommonEntity
     public function setLanguage($language)
     {
         $this->language = $language;
+
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isDefault()
+    {
+        return (bool)$this->default;
+    }
+
+    /**
+     * @param $default
+     * @return $this
+     */
+    public function setDefault($default)
+    {
+        $this->default = (bool)$default;
 
         return $this;
     }

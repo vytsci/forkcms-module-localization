@@ -1,6 +1,6 @@
 <?php
 
-namespace Common\Modules\Localization;
+namespace Common\Modules\Localization\Engine;
 
 /**
  * Class Locale
@@ -8,6 +8,7 @@ namespace Common\Modules\Localization;
  */
 class Locale
 {
+
     /**
      * Languages list.
      *
@@ -38,6 +39,7 @@ class Locale
 
     /**
      * Marks that loop was started ant return current language
+     * @todo remake this so we wont need nextLanguage within while loop
      *
      * @return null|Language
      */
@@ -46,12 +48,12 @@ class Locale
         $this->loop = true;
         $result = $this->currentLanguage();
 
-        /* If result is null that means we reached end of a loop and we reset it automatically */
+        /* If result is null that means we reached end of a loop and we must reset it automatically */
         if (null === $result) {
             $this->resetLanguage();
         }
 
-        return empty($result)?null:$result;
+        return empty($result) ? null : $result;
     }
 
     /**
@@ -67,7 +69,7 @@ class Locale
 
         $result = current($this->languages);
 
-        return empty($result)?null:$result;
+        return empty($result) ? null : $result;
     }
 
     /**
@@ -79,7 +81,7 @@ class Locale
     {
         $result = next($this->languages);
 
-        return empty($result)?null:$result;
+        return empty($result) ? null : $result;
     }
 
     /**
@@ -107,10 +109,24 @@ class Locale
         while ($language = $this->loopLanguage()) {
             $result[$language->getCode()] = array(
                 'code' => $language->getCode(),
-                'title' => $language->getTitle()
+                'title' => $language->getTitle(),
             );
             $this->nextLanguage();
         }
+
+        $this->resetLanguage();
+
+        return $result;
+    }
+
+    /**
+     * Gets raw languages array values are lt,en,ru,etc
+     *
+     * @return array
+     */
+    public function getLanguagesRaw()
+    {
+        $result = array_keys($this->languages);
 
         return $result;
     }

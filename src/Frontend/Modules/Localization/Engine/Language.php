@@ -4,7 +4,7 @@ namespace Frontend\Modules\Localization\Engine;
 
 use Frontend\Core\Engine\Language as FL;
 
-use Common\Modules\Localization\Language as CommonLanguage;
+use Common\Modules\Localization\Engine\Language as CommonLanguage;
 
 /**
  * Class Language
@@ -12,6 +12,7 @@ use Common\Modules\Localization\Language as CommonLanguage;
  */
 class Language extends CommonLanguage
 {
+
     /**
      * Meta object. Only if required.
      *

@@ -10,6 +10,7 @@ use Frontend\Core\Engine\Template as FrontendTemplate;
  */
 class Helper
 {
+
     /**
      * SpoonTemplate is so crappy it can't parse variables into included file so we need to compile this manually
      *
@@ -25,6 +26,7 @@ class Helper
         $tpl->assign('language', $language->getCode());
         $tpl->assign('fields', $fields);
         $tpl->assign('errors', $errors);
-        return $tpl->getContent(FRONTEND_MODULES_PATH . '/Localization/Layout/Templates/Seo.tpl');
+
+        return $tpl->getContent(FRONTEND_MODULES_PATH.'/Localization/Layout/Templates/Seo.tpl');
     }
 }
