@@ -176,7 +176,7 @@ class Form extends FrontendForm
      * @param bool $HTML
      * @return \SpoonFormText
      */
-    public function addText($name, $value = null, $maxLength = 255, $class = null, $classError = null, $HTML = false)
+    public function addText($name, $value = null, $maxLength = 255, $class = null, $classError = null, $HTML = true)
     {
         $name = $this->getFieldName($name, $this->locale->currentLanguage());
 

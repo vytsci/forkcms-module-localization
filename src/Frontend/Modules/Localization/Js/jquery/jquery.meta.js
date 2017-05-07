@@ -14,10 +14,10 @@
             var $pageTitle = $('#' + (language ? language + 'P' : 'p') + 'ageTitle');
             var $pageTitleOverwrite = $('#' + (language ? language + 'P' : 'p') + 'ageTitleOverwrite');
             var $navigationTitle = $('#' + (language ? language + 'M' : 'm') + 'avigationTitle');
-            var $navigationTitleOverwrite = $('#' + (language ? language + 'P' : 'n') + 'avigationTitleOverwrite');
+            var $navigationTitleOverwrite = $('#' + (language ? language + 'N' : 'n') + 'avigationTitleOverwrite');
             var $metaDescription = $('#' + (language ? language + 'M' : 'm') + 'etaDescription');
-            var $metaDescriptionOverwrite = $('#' + (language ? language + 'P' : 'm') + 'etaDescriptionOverwrite');
-            var $metaKeywords = $('#' + (language ? language + 'M' : 'p') + 'etaKeywords');
+            var $metaDescriptionOverwrite = $('#' + (language ? language + 'M' : 'm') + 'etaDescriptionOverwrite');
+            var $metaKeywords = $('#' + (language ? language + 'P' : 'p') + 'etaKeywords');
             var $metaKeywordsOverwrite = $('#' + (language ? language + 'M' : 'm') + 'etaKeywordsOverwrite');
             var $urlOverwrite = $('#' + (language ? language + 'U' : 'u') + 'rlOverwrite');
 

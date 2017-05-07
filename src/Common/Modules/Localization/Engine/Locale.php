@@ -31,7 +31,7 @@ class Locale
     function __construct($languages = array())
     {
         foreach ($languages as $languagesValue) {
-            $this->setLanguage($languagesValue);
+            $this->setLanguage(new Language($languagesValue));
         }
 
         $this->resetLanguage();
@@ -45,6 +45,10 @@ class Locale
      */
     public function loopLanguage()
     {
+        if (empty($this->languages)) {
+            return null;
+        }
+
         $this->loop = true;
         $result = $this->currentLanguage();
 

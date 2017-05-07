@@ -17,35 +17,116 @@ class Stemmer
         'en' => array(),
         'lt' => array(
             //nominative singular
-            'as', 'is', 'ys', 'a', 'e', 'is', 'us', 'ius',
+            'as',
+            'is',
+            'ys',
+            'a',
+            'e',
+            'is',
+            'us',
+            'ius',
             //nominative plural
-            'ai', 'iai', 'os', 'es', 'ys', 'ai',
+            'ai',
+            'iai',
+            'os',
+            'es',
+            'ys',
+            'ai',
             //genitive singular
-            'o', 'io', 'io', 'os', 'es', 'ies', 'aus', 'iaus',
+            'o',
+            'io',
+            'io',
+            'os',
+            'es',
+            'ies',
+            'aus',
+            'iaus',
             //genitive plural
-            'u', 'iu',
+            'u',
+            'iu',
             //dative singular
-            'ui', 'iui', 'iui', 'ai', 'ei', 'iai', 'ui', 'iui',
+            'ui',
+            'iui',
+            'iui',
+            'ai',
+            'ei',
+            'iai',
+            'ui',
+            'iui',
             //dative plural
-            'ams', 'iams', 'oms', 'ems', 'ims', 'ams',
+            'ams',
+            'iams',
+            'oms',
+            'ems',
+            'ims',
+            'ams',
             //accusative singular
-            'a', 'i', 'i', 'a', 'e', 'i', 'u', 'iu',
+            'a',
+            'i',
+            'i',
+            'a',
+            'e',
+            'i',
+            'u',
+            'iu',
             //accusative plural
-            'us', 'ius', 'ius', 'as', 'es', 'is', 'us', 'ius',
+            'us',
+            'ius',
+            'ius',
+            'as',
+            'es',
+            'is',
+            'us',
+            'ius',
             //instrumental singular
-            'u', 'iu', 'iu', 'a', 'e', 'imi', 'umi', 'iumi',
+            'u',
+            'iu',
+            'iu',
+            'a',
+            'e',
+            'imi',
+            'umi',
+            'iumi',
             //instrumental plural
-            'ais', 'iais', 'omis', 'emis', 'imis', 'ais',
+            'ais',
+            'iais',
+            'omis',
+            'emis',
+            'imis',
+            'ais',
             //locative singular
-            'e', 'yje', 'oje', 'eje', 'uje', 'iuje',
+            'e',
+            'yje',
+            'oje',
+            'eje',
+            'uje',
+            'iuje',
             //locative plural
-            'ais', 'iais', 'omis', 'emis', 'imis', 'ais',
+            'ais',
+            'iais',
+            'omis',
+            'emis',
+            'imis',
+            'ais',
             //vocative singular
-            'e', 'i', 'y', 'a', 'e', 'ie', 'au',
+            'e',
+            'i',
+            'y',
+            'a',
+            'e',
+            'ie',
+            'au',
             //vocative plural
-            'ai', 'iai', 'iai', 'os', 'es', 'ys',
+            'ai',
+            'iai',
+            'iai',
+            'os',
+            'es',
+            'ys',
             //custom
-            'ias', 'auti', 'aus',
+            'ias',
+            'auti',
+            'aus',
         ),
     );
 
@@ -147,7 +228,7 @@ class Stemmer
 
             $strings = array();
             foreach ($this->words as $word) {
-                $strings[] = isset($this->stems[$word])?$this->stems[$word].'*':$word;
+                $strings[] = isset($this->stems[$word]) ? $this->stems[$word].'*' : $word;
             }
 
             $query .= implode(' ', $strings).'\' IN BOOLEAN MODE)';

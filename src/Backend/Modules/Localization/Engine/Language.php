@@ -23,12 +23,13 @@ class Language extends CommonLanguage
     /**
      * Sets all necessary variables.
      *
-     * @param $code Language code. Code will be converted to lowercase. Example: 'en'
+     * @param $code string Langauge code. Code will be converted to lowercase. Example: 'en'
      * @throws \SpoonLocaleException
      */
     function __construct($code)
     {
-        $this->setCode(strtolower($code));
+        parent::__construct($code);
+
         $this->setTitle(BL::getLabel(strtoupper($this->getCode())));
     }
 

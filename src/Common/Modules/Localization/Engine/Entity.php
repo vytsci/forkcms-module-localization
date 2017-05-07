@@ -67,8 +67,6 @@ class Entity extends CommonEntity
     public function loadLocale()
     {
         if ($this->hasLanguages()) {
-            $this->addRelation('locale');
-
             $languages = $this->getLanguages();
 
             foreach ($languages as $language) {
@@ -135,12 +133,21 @@ class Entity extends CommonEntity
             $language = $this->_language;
         }
 
+        if (count($this->locale) === 1) {
+            reset($this->locale);
+            $language = key($this->locale);
+        }
+
         if (empty($language)) {
-            throw new \Exception('It is required to set or pass language');
+            if ($this->isArraying()) {
+                return array();
+            }
+
+            throw new \Exception('Locale object could not be retrieved');
         }
 
         if (!isset($this->locale[$language])) {
-            $this->locale[$language] = new $this->_locale();
+            $this->locale[$language] = new $this->_locale(array($this->getId(), $language));
             $this->locale[$language]->setLanguage($language);
         }
 
@@ -186,11 +193,17 @@ class Entity extends CommonEntity
             $language = $this->_language;
         }
 
+        if ($locale->hasLanguage()) {
+            $language = $locale->getLanguage();
+        }
+
         if (empty($language)) {
             throw new \Exception('Language cannot be empty');
         }
 
+        $locale->setLanguage($language);
         $this->locale[$language] = $locale;
+        $this->addRequirement('locale');
 
         return $this->getLocale($language);
     }

@@ -26,7 +26,7 @@ class Language
     /**
      * Sets all necessary variables.
      *
-     * @param $code Language code. Code will be converted to lowercase. Example: 'en'
+     * @param $code string Language code. Code will be converted to lowercase. Example: 'en'
      * @throws \SpoonLocaleException
      */
     function __construct($code)

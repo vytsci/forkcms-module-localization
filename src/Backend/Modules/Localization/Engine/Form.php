@@ -47,7 +47,9 @@ class Form extends BackendForm
     ) {
         $this->locale = $locale;
 
-        $this->header = BackendModel::getContainer()->get('header');
+        if (BackendModel::getContainer()->has('header')) {
+            $this->header = BackendModel::getContainer()->get('header');
+        }
 
         parent::__construct($name, $action, $method, $useToken, $useGlobalError);
     }
@@ -127,7 +129,7 @@ class Form extends BackendForm
         $classError = 'inputEditorError '.(string)$classError;
         $HTML = (bool)$HTML;
 
-        if (BackendModel::getContainer()->has('header')) {
+        if ($this->header instanceof BackendHeader) {
             $this->header->addJS('ckeditor/ckeditor.js', 'Core', false);
             $this->header->addJS('ckeditor/adapters/jquery.js', 'Core', false);
             $this->header->addJS('ckfinder/ckfinder.js', 'Core', false);
@@ -254,8 +256,10 @@ class Form extends BackendForm
      */
     public function parse($tpl)
     {
-        $this->header->addJS('jquery/jquery.meta.js', 'Localization', true);
-        $this->header->addJS('Meta.js', 'Localization', true);
+        if ($this->header instanceof BackendHeader) {
+            $this->header->addJS('jquery/jquery.meta.js', 'Localization', true);
+            $this->header->addJS('Meta.js', 'Localization', true);
+        }
 
         $tpl->assign('form', $this);
         $this->parseLocalization($tpl);
